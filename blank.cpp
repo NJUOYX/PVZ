@@ -1,22 +1,51 @@
 #include "pch.h"
 #include "blank.h"
 
+Blank::Blank():staff_in_this_blank(nullptr)
+{
+}
+
+Blank::~Blank()
+{
+	if (staff_in_this_blank != nullptr)
+		delete staff_in_this_blank;
+}
+
+void Blank::event_exc()
+{
+	std::cout << "implement blank event_exc()\n";
+}
+
 int Blank::fill_staff(Staff* staff)
 {
-	//TOOD 将staff放入Blank中
-	ASSERT;
-	return 0;
+	if (staff_in_this_blank == nullptr)
+	{
+		staff_in_this_blank = staff;
+		return INT_RETURN_TRUE;
+	}
+	else
+	{
+		return INT_RETURN_FALSE;
+	}
 }
 
 int Blank::del_staff()
 {
-	//TOOD 删除本blank拥有的staff
-	ASSERT;
-	return 0;
+	if (staff_in_this_blank == nullptr)
+		return INT_RETURN_FALSE;
+	else {
+		delete staff_in_this_blank;
+		staff_in_this_blank = nullptr;
+		return INT_RETURN_TRUE;
+	}
 }
 
 Staff const& Blank::view_staff() const
 {
-	ASSERT;
-	// TODO: 在此处插入 return 语句
+	if (staff_in_this_blank == nullptr)
+	{
+		auto res = std::string(BLANK_VIEW_STAFF) + DOUBLE_DELETE;
+		throw std::exception(res.c_str());
+	}
+	return *staff_in_this_blank;
 }

@@ -21,26 +21,63 @@ void GameSys::add_event(Event* _event)
 
 int GameSys::fill_staff_in_blank(Pos const& position, Staff* new_staff)
 {
-	ASSERT;
-	return 0;
+#ifdef ONE_ROW_GAME
+	if (pos_check(position))
+	{
+		return event_ptrs[position.col]->fill_staff(new_staff);
+	}
+	else
+		return INT_RETURN_FALSE;
+#elif MUL_ROW_GAME
+
+#endif
+	return INT_RETURN_FALSE;
 }
 
 int GameSys::del_staff_in_blank(Pos const& position)
 {
-	ASSERT;
-	return 0;
+#ifdef ONE_ROW_GAME
+	if (pos_check(position))
+	{
+		return event_ptrs[position.col]->del_staff();
+}
+	else
+		return INT_RETURN_FALSE;
+#elif MUL_ROW_GAME
+
+#endif
+	return INT_RETURN_FALSE;
 }
 
 Staff const& GameSys::view_staff(Pos const& position)
 {
-	// TODO: 返回一个Staff对象，当时调用者不能对获得的Staff对象进行修改
-	ASSERT;
+	if (pos_check(position))
+	{
+		return event_ptrs[position.col]->view_staff();
+	}
+	else
+		return Staff();
+}
+
+Call_Info GameSys::normal_sys_call()
+{
+	return Call_Info(1);
+}
+
+bool GameSys::pos_check(Pos const& position) const
+{
+	if (position.col<COL_INDEX_MIN || position.col>COL_INDEX_MAX)
+		return false;
+	else if (position.row<ROW_INDEX_MIN || position.row>ROW_INDEX_MAX)
+		return false;
+	else
+		return true;
 }
 
 GameLoader::GameLoader():ptrs(COL_MAX)
 {
 	for (auto& i : ptrs)
-		i = new Event();
+		i = new Blank();
 }
 
 GameLoader::~GameLoader()

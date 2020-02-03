@@ -1,6 +1,6 @@
 #pragma once
 #include"pch.h"
-
+#include"blank.h"
 class GameLoader {
 public:
 	GameLoader();
@@ -17,7 +17,7 @@ struct Pos {
 	Pos(int row,int col):row(row),col(col){}
 };
 
-class GameSys{
+class GameSys:public Blank_Sys_Call{
 public:
 	GameSys(GameLoader const&loader);
 	int exc();//‘› ±≤ª”√
@@ -26,7 +26,10 @@ public:
 	int fill_staff_in_blank(Pos const& position, Staff* new_staff);
 	int del_staff_in_blank(Pos const& position);
 	Staff const& view_staff(Pos const&position);
+public://blank
+	Call_Info normal_sys_call()override;
+private:
+	bool pos_check(Pos const& position)const;
 private:
 	std::vector<Event*>event_ptrs;
 };
-
