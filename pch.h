@@ -12,6 +12,7 @@
 #include<iostream>
 #include<queue>
 #include<algorithm>
+#include"Info.h"
 #ifdef TEST
 #define private public
 #define protected public
@@ -36,16 +37,80 @@ constexpr auto ROW_MAX = 9;
 constexpr auto INT_RETURN_TRUE = 0;
 constexpr auto INT_RETURN_FALSE = -1;
 
-class GameSys;
-GameSys* sys_ptr;
+
 class Event;
 class Blank_Call;
 class Blank_Sys_Call;
-using Staff_Info = int;
+
+
+class Staff_Info :public Info{
+public:
+	Staff_Info() :Info(){}
+	Staff_Info(int info):Info(info){}
+};
+
+
+
+class Call_Info;
+
+
+
+class Damage {
+public:
+	Damage() :damage(0) {}
+	Damage(int damage) :damage(damage) {}
+	int get_int_damage()const {
+		return damage;
+	}
+private:
+	int damage;
+};
+
+class Health {
+public:
+	Health():hp(0){}
+	Health(int hp):hp(hp){}
+	Health& normal_decline(Damage damage) {
+		hp -= damage.get_int_damage();
+		return *this;
+	}
+	bool is_alive()const {
+		return hp > 0;
+	}
+	int get_hp()const {
+		return hp;
+	}
+private:
+	int hp;
+};
+
+class STAFF_ATTR
+{
+private:
+	Health hp;
+	Damage damage;
+public:
+	STAFF_ATTR() :hp(0), damage(0) {}
+	STAFF_ATTR(Health hp, Damage damage) :hp(hp), damage(damage) {}
+	Damage do_damage() {
+		return damage;
+	}
+	Health show_hp()const {
+		return hp;
+	}
+	Health damage_me(Damage damage) {
+		hp.normal_decline(damage);
+		return hp;
+	}
+	bool is_alive()const {
+		return hp.is_alive();
+	}
+};
+
 class Staff {
 public:
-	virtual Staff_Info exc(Blank_Call*e_ptr) = 0;
-	virtual Staff_Info do_damage(int damage) = 0;
+	virtual Staff_Info exc(Blank_Call* e_ptr) = 0;
+	virtual Staff_Info do_damage(Damage damage) = 0;
 	virtual bool is_alive()const = 0;
 };
 
@@ -58,27 +123,9 @@ public:
 	virtual int del_staff() = 0;
 
 	virtual Staff const& view_staff()const = 0;
+
+	virtual Call_Info do_damage_to_me(Damage damage) = 0;
+
+	virtual void load_sys(Blank_Sys_Call* sys_ptr) = 0;
 };
 
-class STAFF_ATTR
-{
-private:
-	int hp;
-	int damage;
-public:
-	STAFF_ATTR() :hp(0), damage(0) {}
-	STAFF_ATTR(int hp, int damage) :hp(hp), damage(damage) {}
-	int do_damage() {
-		return damage;
-	}
-	int show_hp()const {
-		return hp;
-	}
-	int damage_me(int damage) {
-		hp -= damage;
-		return hp;
-	}
-	bool is_alive()const {
-		return hp > 0;
-	}
-};

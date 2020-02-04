@@ -5,6 +5,17 @@ Blank::Blank():staff_in_this_blank(nullptr)
 {
 }
 
+Blank::Blank(Blank_Sys_Call* sys_ptr):sys_ptr(sys_ptr)
+{
+}
+
+void Blank::load_sys(Blank_Sys_Call* sys_ptr)
+{
+	this->sys_ptr = sys_ptr;
+}
+
+
+
 Blank::~Blank()
 {
 	if (staff_in_this_blank != nullptr)
@@ -13,7 +24,7 @@ Blank::~Blank()
 
 void Blank::event_exc()
 {
-	std::cout << "implement blank event_exc()\n";
+	staff_in_this_blank->exc(this);
 }
 
 int Blank::fill_staff(Staff* staff)
@@ -48,4 +59,19 @@ Staff const& Blank::view_staff() const
 		throw std::exception(res.c_str());
 	}
 	return *staff_in_this_blank;
+}
+
+Call_Info Blank::do_damage_to_me(Damage damage)
+{
+	return staff_in_this_blank->do_damage(damage);
+}
+
+Blank_Call_Info Blank::normal_call()
+{
+	return Blank_Call_Info();
+}
+
+Blank_Call_Info Blank::normal_attack(Damage damage)
+{
+	return sys_ptr->try_attack(this,damage).get_Info();
 }
