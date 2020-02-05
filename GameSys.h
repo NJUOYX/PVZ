@@ -1,6 +1,7 @@
 #pragma once
 #include"pch.h"
 #include"blank.h"
+
 class GameLoader {
 public:
 	GameLoader();
@@ -16,6 +17,7 @@ struct Pos {
 	Pos():row(0),col(0){}
 	Pos(int row,int col):row(row),col(col){}
 	Pos& add_col(int dis) { col += dis; return *this; }
+	Pos& subtract_col(int dis) { col -= dis; return *this; }
 };
 
 class GameSys:public Blank_Sys_Call{
@@ -31,6 +33,7 @@ public:
 public://blank
 	Call_Info normal_sys_call()override;
 	Call_Info try_attack(Event* sender, Damage damage)override;
+	Call_Info hand_over_staff(Event* sender, Direction dir)override;
 private:
 	bool pos_check(Pos const& position)const;
 	Pos find_event_pos(Event* e_ptr)const;

@@ -37,7 +37,12 @@ Normal_Zombie::Normal_Zombie(STAFF_ATTR attr):attribute(attr)
 
 Staff_Info Normal_Zombie::exc(Blank_Call* e_ptr)
 {
-	return Staff_Info();
+	auto require_info = e_ptr->zb_move_require();
+	if(require_info.is_permit())
+		return Staff_Info(1);
+	else {
+		return Staff_Info(0);
+	}
 }
 
 Staff_Info Normal_Zombie::do_damage(Damage damage)

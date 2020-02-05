@@ -6,12 +6,24 @@ public:
 	Blank_Call_Info() :Info(){}
 	Blank_Call_Info(Info info):Info(info){}
 	Info get_Info()const { return info; }
+	bool is_permit()const {
+		return cmp_info.permission;
+	}
+	void permit_it() {
+		cmp_info.permission = true;
+	}
+private:
+	union Blank_CallCmpInfo
+	{
+		bool permission;
+	}cmp_info;
 };
 
 class Blank_Call {
 public:
 	virtual Blank_Call_Info normal_call() = 0;
 	virtual Blank_Call_Info normal_attack(Damage damage) = 0;
+	virtual Blank_Call_Info zb_move_require() = 0;
 };
 
 class Standard :public Staff {

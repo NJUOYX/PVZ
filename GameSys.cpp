@@ -89,6 +89,36 @@ Call_Info GameSys::try_attack(Event* sender, Damage damage)
 	return Call_Info(INT_RETURN_FALSE);
 }
 
+Call_Info GameSys::hand_over_staff(Event* sender, Direction dir)
+{
+	auto sender_pos = find_event_pos(sender);
+	assert(pos_check(sender_pos));
+	auto new_pos(sender_pos);
+	switch (dir)
+	{
+	case Direction::Zombie:new_pos.subtract_col(1);
+		break;
+	case Direction::Plant:new_pos.add_col(1);
+		break;
+	default:
+		break;
+	}
+	if (pos_check(new_pos))
+	{
+		auto staff_ptr = sender->free_staff();
+		assert(staff_ptr != nullptr);
+		auto new_pos_event = find_pos_event(new_pos);
+		new_pos_event->fill_staff(staff_ptr);
+		Call_Info res;
+		res.permit_it();
+		return res;
+	}
+	else
+	{
+		return Call_Info(0);
+	}
+}
+
 bool GameSys::pos_check(Pos const& position) const
 {
 	if (position.col<COL_INDEX_MIN || position.col>COL_INDEX_MAX)

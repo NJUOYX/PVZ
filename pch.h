@@ -127,5 +127,7 @@ public:
 	virtual Call_Info do_damage_to_me(Damage damage) = 0;
 
 	virtual void load_sys(Blank_Sys_Call* sys_ptr) = 0;
+
+	virtual Staff* free_staff() = 0;
 };
 
